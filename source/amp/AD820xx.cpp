@@ -9,7 +9,7 @@ DESCRIPTION			    	: AD820xx driver
 *******************************************************************************/
 #include <stdio.h>
 #include "AD820xx.h"
-#include "../drivers/I2cPort.h"
+#include "../drivers/i2c/I2cPort.h"
 //#include "McuI2c.h"
 //#include "DBG.h"
 //#include "McuPortCtrl.h"
