@@ -15,9 +15,9 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef UART_EXAM_H
-#define    UART_EXAM_H
+//#ifndef UART_EXAM_H
+//#define    UART_EXAM_H
 
-extern void* uart_TaskMain(void* pArg);
+void* uart_TaskMain(void* pArg);
 
-#endif	/* I2cPort_H */
+//#endif	/* I2cPort_H */

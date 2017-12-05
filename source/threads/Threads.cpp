@@ -34,6 +34,9 @@ void* bar(void* ptr)
 	return 0;
 }
 
+
+extern void* uart_TaskMain(void* pArg);
+
 int Init_CreateThreads(void)
 {
   int  iret1 = 0;
