@@ -11,7 +11,7 @@
 #include <pthread.h>
 
 #include "../console/console.h"
-#include "../drivers/uart/Example_uart.h"
+//#include "../drivers/uart/Example_uart.h"
 
 void* foo(void* ptr)
 {
