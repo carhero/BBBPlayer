@@ -1,3 +1,5 @@
+#if 0
+
 #include <iostream>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -137,3 +139,4 @@ void* uart_TaskMain(void* pArg)
 }
 #endif
 
+#endif

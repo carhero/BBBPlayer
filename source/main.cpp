@@ -7,15 +7,19 @@
 
 #include "system/system.h"
 #include "threads/Threads.h"
+#include "network/ssdp/ssdp.h"
 
 int main(void)
 {
     // System Init
     System_Init();
 
-    // Init Thread
+    // Init UART
     Init_CreateThreads();
-    // 
+
+    // Init Network
+    SSDP_Init();
+
     while(1);
 
     return 0;
