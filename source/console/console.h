@@ -9,5 +9,5 @@
 #define SOURCE_CONSOLE_CONSOLE_H_
 
 void* Console_TaskMain(void* pArg);
-
+void* uart_TaskMain(void* pArg);
 #endif /* SOURCE_CONSOLE_CONSOLE_H_ */

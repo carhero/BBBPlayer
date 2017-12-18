@@ -11,7 +11,7 @@
 #include <pthread.h>
 
 #include "../console/console.h"
-//#include "../drivers/uart/Example_uart.h"
+//#include "/drivers/uart/BBBEcho.h"
 
 void* foo(void* ptr)
 {
@@ -48,13 +48,13 @@ int Init_CreateThreads(void)
   pthread_t first;     // spawn new thread that calls foo()
   pthread_t second;    // spawn new thread that calls bar(0)
   pthread_t third;     // spawn new thread that calls bar(0)
-  //pthread_t fourth;     // spawn new thread that calls bar(0)
+  pthread_t fourth;     // spawn new thread that calls bar(0)
 
   printf("main, foo and bar now execute concurrently...\n");
   iret1 = pthread_create( &first, NULL, foo, NULL);
   iret2 = pthread_create( &second, NULL, bar, (void*)&idata);
   iret3 = pthread_create( &third, NULL, Console_TaskMain, NULL);
-  //iret4 = pthread_create( &fourth, NULL, uart_TaskMain, NULL);
+//  iret4 = pthread_create( &fourth, NULL, uart_TaskMain, NULL);
 
   // synchronize threads:
   //pthread_join(first, NULL);                // pauses until first finishes
@@ -63,7 +63,7 @@ int Init_CreateThreads(void)
   printf("Thread 1 returns: %d\n",iret1);
   printf("Thread 2 returns: %d\n",iret2);
   printf("Thread 3 returns: %d\n",iret3);
-//  printf("Thread 4 returns: %d\n",iret4);
+  printf("Thread 4 returns: %d\n",iret4);
 
   return 0;
 }
