@@ -23,6 +23,7 @@
 #define BUF_SIZE  1024
 
 // SSDP packet data structure
+//#pragma pack(push,1)
 typedef struct _device_descriptor_t
 {
     int8_t  unique_header[0x4];
@@ -60,7 +61,7 @@ pthread_t th_SSDPReceiver;  // network SSDP serch msg receiver thread
 // Socket variable
 char message[BUF_SIZE];
 int ssdp_skip_flag = 0;
-int Usock = NULL, sock = NULL;  // UDP, TCP socket
+int Usock = 0, sock = 0;  // UDP, TCP socket
 struct sockaddr_in serv_addr,from_adr;
 socklen_t adr_sz;
 
@@ -192,15 +193,15 @@ void error_handling(char *message)
 // ------------------------------------------------
 static int MSearchMessageDataSend(void)
 {
-  Usock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if(Usock==-1)
-  {
-        printf("socket() error\n");
-    return -1;
+    Usock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if(Usock==-1)
+    {
+      printf("socket() error\n");
+      return -1;
     }
 
-  // It is very important to create broadcast message on UDP
-  int broadcast = 1;
+    // It is very important to create broadcast message on UDP
+    int broadcast = 1;
     if( setsockopt(Usock, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) != 0 )
     {
         perror("setsockopt : ");
@@ -209,9 +210,10 @@ static int MSearchMessageDataSend(void)
     }
 
     memset(&serv_addr, 0, sizeof(serv_addr));
-  memset(&st_packet, 0, sizeof(st_packet));
+    memset(&st_packet, 0, sizeof(st_packet));
 
-  //st_packet.unique_header = "PARC";
+    //st_packet.unique_header = "PARC";
+    memcpy(st_packet.unique_header, "PARC", sizeof("PARC"));
     st_packet.announce = 0x01;
     st_packet.version = 0x01000000;
     st_packet.tcp_ip_port = 0;

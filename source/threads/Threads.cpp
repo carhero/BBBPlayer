@@ -48,7 +48,7 @@ int Init_CreateThreads(void)
   pthread_t first;     // spawn new thread that calls foo()
   pthread_t second;    // spawn new thread that calls bar(0)
   pthread_t third;     // spawn new thread that calls bar(0)
-  pthread_t fourth;     // spawn new thread that calls bar(0)
+//  pthread_t fourth;     // spawn new thread that calls bar(0)
 
   printf("main, foo and bar now execute concurrently...\n");
   iret1 = pthread_create( &first, NULL, foo, NULL);
