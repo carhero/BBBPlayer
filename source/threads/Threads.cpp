@@ -12,6 +12,7 @@
 
 #include "../console/console.h"
 //#include "/drivers/uart/BBBEcho.h"
+#include "../network/socket_server/ssdp_server.h"
 
 void* foo(void* ptr)
 {
@@ -48,12 +49,14 @@ int Init_CreateThreads(void)
   pthread_t first;     // spawn new thread that calls foo()
   pthread_t second;    // spawn new thread that calls bar(0)
   pthread_t third;     // spawn new thread that calls bar(0)
-//  pthread_t fourth;     // spawn new thread that calls bar(0)
+  pthread_t fourth;     // spawn new thread that calls bar(0)
 
   printf("main, foo and bar now execute concurrently...\n");
-  iret1 = pthread_create( &first, NULL, foo, NULL);
-  iret2 = pthread_create( &second, NULL, bar, (void*)&idata);
+//  iret1 = pthread_create( &first, NULL, foo, NULL);
+//  iret2 = pthread_create( &second, NULL, bar, (void*)&idata);
   iret3 = pthread_create( &third, NULL, Console_TaskMain, NULL);
+  iret4 = pthread_create( &fourth, NULL, SSDP_Init, NULL);
+
 //  iret4 = pthread_create( &fourth, NULL, uart_TaskMain, NULL);
 
   // synchronize threads:

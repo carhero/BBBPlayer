@@ -15,11 +15,11 @@ void* uart_TaskMain(void* pArg);
 
 /* baudrate settings are defined in <asm/termbits.h>, which is
    included by <termios.h> */
-#define BAUDRATE B115200   // Change as needed, keep B
+//#define BAUDRATE B115200   // Change as needed, keep B
 #define BAUDRATE B115200
 
 /* change this definition for the correct port */
-#define MODEMDEVICE "/dev/ttyO0" //Beaglebone Black serial port
+#define MODEMDEVICE "/dev/ttyO2" //Beaglebone Black serial port
 //#define MODEMDEVICE "/dev/ttyO3" //Beaglebone Black serial port
 
 #define _POSIX_SOURCE 1 /* POSIX compliant source */

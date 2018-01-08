@@ -7,7 +7,7 @@
 
 #include "system/system.h"
 #include "threads/Threads.h"
-#include "network/ssdp/ssdp.h"
+//#include "network/socket_server/ssdp_server.h"
 
 int main(void)
 {
@@ -18,7 +18,7 @@ int main(void)
     Init_CreateThreads();
 
     // Init Network
-    SSDP_Init();
+    //SSDP_Init();
 
     while(1);
 
