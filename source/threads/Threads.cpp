@@ -13,6 +13,7 @@
 #include "../console/console.h"
 //#include "/drivers/uart/BBBEcho.h"
 #include "../network/socket_server/ssdp_server.h"
+#include "socket_server/tcp_server.h"
 
 void* foo(void* ptr)
 {
@@ -53,7 +54,7 @@ int Init_CreateThreads(void)
 
   printf("main, foo and bar now execute concurrently...\n");
 //  iret1 = pthread_create( &first, NULL, foo, NULL);
-//  iret2 = pthread_create( &second, NULL, bar, (void*)&idata);
+  iret2 = pthread_create( &second, NULL, TCP_ServerMain, NULL);
   iret3 = pthread_create( &third, NULL, Console_TaskMain, NULL);
   iret4 = pthread_create( &fourth, NULL, SSDP_Init, NULL);
 

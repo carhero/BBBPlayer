@@ -34,13 +34,15 @@
 								<option id="gnu.cpp.compiler.option.optimization.level.1212068964" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.debugging.level.1314090528" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.include.paths.1923790611" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/network/protocol}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/GPIO}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/drivers}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/network/socket_server}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;D:\Project\BeagleBone\Work\SmartAudio\Source&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;D:\Project\BeagleBone\Work\BBBPlayer\source\network&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;D:\Project\BeagleBone\Work\BBBPlayer\source\amp&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;D:\Project\BeagleBone\Work\BBBPlayer\source\console&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;D:\Project\BeagleBone\Work\BBBPlayer\source\drivers&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/network}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/system}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/threads}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.544118697" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "amp/AD820xx.h"
 #include "../GPIO/GPIOCtrl.h"
+#include "protocol.h"
 
 void System_Init()
 {
@@ -13,4 +14,6 @@ void System_Init()
     // Volume Init
     AD820xx_Init();
     AD820xx_SetMasterVolume(50);
+
+    protocol_init();
 }

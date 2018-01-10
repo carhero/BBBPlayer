@@ -5,12 +5,6 @@
  *      Author: Administrator
  */
 
-/*
- * ssdp_server.c
- *
- *  Created on: Dec 19, 2017
- *      Author: Administrator
- */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
