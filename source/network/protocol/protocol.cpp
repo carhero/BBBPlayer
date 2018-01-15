@@ -1,11 +1,9 @@
+#include <protocol/protocol.h>
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>     /* atoi */
 
-#include "protocol.h"
-
-// System Call header
 #include "AD820xx.h"
 #include "GPIOCtrl.h"
 #include "gpio/GPIO.h"

@@ -9,10 +9,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <protocol/protocol.h>
+#include <socket_server/tcp_server.h>
 #include <sys/socket.h>
 
-#include "socket_server/tcp_server.h"
-#include "protocol.h"
 
 #define BUF_SIZE 1024
 #define TCP_PORT "14999"

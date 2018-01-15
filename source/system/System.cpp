@@ -1,8 +1,9 @@
 
+#include <protocol/protocol.h>
 #include <stdio.h>
 #include "amp/AD820xx.h"
 #include "../GPIO/GPIOCtrl.h"
-#include "protocol.h"
+
 
 void System_Init()
 {

@@ -18,7 +18,7 @@ using namespace std;
 //enum VALUE{ LOW=0, HIGH=1 };
 //enum EDGE{ NONE, RISING, FALLING, BOTH };
 
-GPIO outGPIO(49), inGPIO(115), out23GPIO(23);
+GPIO outGPIO(67), inGPIO(115), out23GPIO(23);
 
 int GPIOCtrl_Init()
 {
@@ -67,6 +67,9 @@ void GPIOCtrl_swingPort(void)
         i--;
         out23GPIO.streamWrite(HIGH);
         out23GPIO.streamWrite(LOW);
+
+        outGPIO.streamWrite(HIGH);
+        outGPIO.streamWrite(LOW);
     }
 }
 

@@ -9,11 +9,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <socket_server/ssdp_server.h>
+#include <socket_server/tcp_server.h>
 
 #include "../console/console.h"
 //#include "/drivers/uart/BBBEcho.h"
-#include "../network/socket_server/ssdp_server.h"
-#include "socket_server/tcp_server.h"
+
 
 void* foo(void* ptr)
 {

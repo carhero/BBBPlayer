@@ -18,7 +18,7 @@
 #include <net/if.h>
 #include <dlfcn.h>
 
-#include "ssdp.h"
+#include <ssdp/ssdp.h>
 
 #define BUF_SIZE  1024
 
