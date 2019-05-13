@@ -71,6 +71,12 @@ namespace cacaosd_i2cport {
 
         void writeByteBuffer(uint8_t DATA_REGADD, uint8_t *data, uint8_t length);
 
+        void writeByteWithReg16(uint8_t DevAdd, uint16_t Reg16Addr, uint8_t *data,
+                                          uint8_t length);
+        uint8_t readByteWithReg16(uint8_t DevAdd, uint16_t Reg16Addr, uint8_t length);
+
+        uint8_t readBufferWithReg16(uint8_t DevAdd, uint16_t Reg16Addr, uint8_t *data,  uint8_t length);
+
         void writeByteArduino(int8_t data);
 
         void writeByteBufferArduino(uint8_t *data, uint8_t length);
@@ -99,5 +105,5 @@ namespace cacaosd_i2cport {
     };
 }  // namespace cacaosd_i2cport
 
-#endif	/* I2cPort_H */
+#endif  /* I2cPort_H */
 

@@ -13,8 +13,8 @@ void System_Init()
     GPIOCtrl_Init();
 
     // Volume Init
-    AD820xx_Init();
-    AD820xx_SetMasterVolume(50);
+    //AD820xx_Init();
+    //AD820xx_SetMasterVolume(50);
 
     protocol_init();
 }

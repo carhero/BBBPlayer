@@ -7,7 +7,10 @@
 
 #include "system/system.h"
 #include "threads/Threads.h"
+#include "network/ssdp/ssdp.h"
+#include "../example/eeprom_i2c.h"
 //#include "network/socket_server/ssdp_server.h"
+//#include <linux/gpio.h>       // Required for the GPIO functions
 
 int main(void)
 {
@@ -18,11 +21,12 @@ int main(void)
     Init_CreateThreads();
 
     // Init Network
-    //SSDP_Init();
+    SSDP_Init();
 
-    while(1);
+    EEPROM_I2CInit();
+
+    while (1);
 
     return 0;
 }
-
 

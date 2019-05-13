@@ -76,8 +76,6 @@ void SSDP_InitVariable(void)
     st_packet.version = 0x01000000;
     st_packet.tcp_ip_port = 0;
     memcpy(st_packet.unique_header, "PARC", sizeof("PARC"));
-
-
 }
 
 void Thread_SetUpdateFlag(unsigned int update)
@@ -174,7 +172,7 @@ int TCP_Connection(struct sockaddr_in *from_addr)
     else
   {
     puts("Connected...........");
-    printf("TCP Server IP : %X\n",serv_adr.sin_addr.s_addr);
+    printf("TCP Server IP : %08X\n\r",serv_adr.sin_addr.s_addr);
   }
 
     //close(sock);
@@ -281,7 +279,7 @@ void* thread_SSDPReceiver(void* ptr)
       printf("device_name:%s\n", st_packet.device_name);
       printf("model_name:%s\n", st_packet.model_name);
       printf("serial_number:%s\n", st_packet.serial_number);
-      printf("from_adr.sin_addr:%X\n", from_adr.sin_addr.s_addr);
+      printf("from_adr.sin_addr:%08X\n", from_adr.sin_addr.s_addr);
       #endif
 
       if(from_adr.sin_addr.s_addr != 0)  // add more conditions
@@ -308,6 +306,10 @@ void* thread_SSDPReceiver(void* ptr)
 int SSDP_Init(void)
 {
     SSDP_InitVariable();
+
+    // delay
+    sleep(8);
+
     pthread_create( &th_PollUpdate, NULL, thread_PollingUpdate, NULL);
     pthread_create( &th_SSDPSender, NULL, thread_SSDPSender, NULL);
     pthread_create( &th_SSDPReceiver, NULL, thread_SSDPReceiver, NULL);

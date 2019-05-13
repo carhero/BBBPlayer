@@ -55,9 +55,9 @@ int Init_CreateThreads(void)
 
   printf("main, foo and bar now execute concurrently...\n");
 //  iret1 = pthread_create( &first, NULL, foo, NULL);
-  iret2 = pthread_create( &second, NULL, TCP_ServerMain, NULL);
+//  iret2 = pthread_create( &second, NULL, TCP_ServerMain, NULL);
   iret3 = pthread_create( &third, NULL, Console_TaskMain, NULL);
-  iret4 = pthread_create( &fourth, NULL, SSDP_Init, NULL);
+//  iret4 = pthread_create( &fourth, NULL, SSDP_Init, NULL);
 
 //  iret4 = pthread_create( &fourth, NULL, uart_TaskMain, NULL);
 

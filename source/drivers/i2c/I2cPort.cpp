@@ -15,6 +15,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <string.h>
 #include "I2cPort.h"
 
 namespace cacaosd_i2cport {
@@ -207,9 +208,17 @@ namespace cacaosd_i2cport {
     void I2cPort::writeByteBuffer(uint8_t DATA_REGADD, uint8_t *data,
                                   uint8_t length) {
 
-        uint8_t buffer[1];
+        uint8_t buffer[100];
         buffer[0] = DATA_REGADD;
 
+        memcpy(&buffer[1], data, length);
+
+        // Write register address
+        if (write(this->file_descriptor, buffer, 2+length) != 2+length) {
+            msg_error("Can not write data. Address %d.", device_address);
+        }
+
+#if 0
         if (write(this->file_descriptor, buffer, 1) != 1) {
             msg_error("Can not write data. Address %d.", device_address);
         }
@@ -217,6 +226,94 @@ namespace cacaosd_i2cport {
         if (write(this->file_descriptor, data, length) != length) {
             msg_error("Can not write data. Address %d.", device_address);
         }
+#endif
+    }
+
+
+/**
+ * @function readBufferWithReg16(uint8_t DevAdd, uint16_t Reg16Addr, uint8_t *data, uint8_t length)
+ * @param DevAdd Data device Address.
+ * @param data Data storage array.
+ * @param length Array length.
+ * @return void.
+ */
+    uint8_t I2cPort::readBufferWithReg16(uint8_t DevAdd, uint16_t Reg16Addr, uint8_t *data,  uint8_t length) {
+
+        uint8_t buffer[100] = {0,};
+        uint8_t value[1] = {0,};
+
+        /* set register16 address buffer */
+        buffer[0] = (uint8_t)((Reg16Addr>>8)&0x00FF);
+        buffer[1] = (uint8_t)(Reg16Addr&0x00FF);
+
+        // Write register address
+        if (write(this->file_descriptor, buffer, 2) != 2) {
+            msg_error("Can not write data. Address %d.", device_address);
+        }
+
+        if (read(this->file_descriptor, data, length) != length) {
+            msg_error("Can not read data. Address %d.", device_address);
+        }
+
+        return value[0];
+
+    }
+
+/**
+ * @function writeByteReg16(uint8_t DevAdd, uint16_t Reg16Addr, uint8_t *data, uint8_t length)
+ * @param DevAdd Data device Address.
+ * @param data Data storage array.
+ * @param length Array length.
+ * @return void.
+ */
+    void I2cPort::writeByteWithReg16(uint8_t DevAdd, uint16_t Reg16Addr, uint8_t *data,
+                                  uint8_t length) {
+
+        uint8_t dev_addr[1] = {0,};
+        uint8_t buffer[100] = {0,};
+
+        /* set device address buffer */
+        dev_addr[0] = DevAdd;
+
+        /* set register16 address buffer */
+        buffer[0] = (uint8_t)((Reg16Addr>>8)&0x00FF);
+        buffer[1] = (uint8_t)(Reg16Addr&0x00FF);
+        memcpy(&buffer[2], data, length);
+
+        // Write register address
+        if (write(this->file_descriptor, buffer, 2+length) != 2+length) {
+            msg_error("Can not write data. Address %d.", device_address);
+        }
+
+    }
+
+
+/**
+ * @function readByteWithReg16(uint8_t DevAdd, uint16_t Reg16Addr, uint8_t *data, uint8_t length)
+ * @param DevAdd Data device Address.
+ * @param data Data storage array.
+ * @param length Array length.
+ * @return void.
+ */
+    uint8_t I2cPort::readByteWithReg16(uint8_t DevAdd, uint16_t Reg16Addr,  uint8_t length) {
+
+        uint8_t buffer[4] = {0,};
+        uint8_t value[1] = {0,};
+
+        /* set register16 address buffer */
+        buffer[0] = (uint8_t)((Reg16Addr>>8)&0x00FF);
+        buffer[1] = (uint8_t)(Reg16Addr&0x00FF);
+
+        // Write register address
+        if (write(this->file_descriptor, buffer, 2) != 2) {
+            msg_error("Can not write data. Address %d.", device_address);
+        }
+
+        if (read(this->file_descriptor, value, 1) != 1) {
+            msg_error("Can not read data. Address %d.", device_address);
+        }
+
+        return value[0];
 
     }
 
@@ -233,7 +330,6 @@ namespace cacaosd_i2cport {
         if (write(this->file_descriptor, buffer, 1) != 1) {
             msg_error("Can not write data. Address %d.", device_address);
         }
-
     }
 
 /**
@@ -275,6 +371,7 @@ namespace cacaosd_i2cport {
         return (uint8_t) ((temp >> startBit) % (uint8_t) pow(2, length));
     }
 
+
 /**
  * @function readByte(uint8_t DATA_REGADD)
  * @param DATA_REGADD Data Register Address.
@@ -283,7 +380,7 @@ namespace cacaosd_i2cport {
     uint8_t I2cPort::readByte(uint8_t DATA_REGADD) {
 
         uint8_t buffer[1];
-        buffer[0] = DATA_REGADD;
+        buffer[0] = DATA_REGADD | 0x01;
 
         if (write(this->file_descriptor, buffer, 1) != 1) {
             msg_error("Can not write data. Address %d.", device_address);
@@ -297,6 +394,7 @@ namespace cacaosd_i2cport {
 
         return value[0];
     }
+
 
 /**
  * @function readByteBuffer(uint8_t DATA_REGADD, uint8_t *data, uint8_t length)

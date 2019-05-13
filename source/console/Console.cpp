@@ -13,13 +13,16 @@
 #include<unistd.h>
 #include"AD820xx.h"
 #include"../drivers/gpio/GPIO.h"
+#include"../example/eeprom_i2c.h"
 
 using namespace exploringBB;
 
 extern void GPIOCtrl_SetOut(GPIO_VALUE value);
 extern void GPIOCtrl_swingPort(void);
 
-#define MODEMDEVICE "/dev/ttyO2" //Beaglebone Black serial port
+//#define MODEMDEVICE "/dev/ttyO2" //Beaglebone Black serial port
+//#define MODEMDEVICE "/dev/ttyO0" //Beaglebone Black serial port
+#define MODEMDEVICE "/dev/ttyO4" //Beaglebone Black serial port
 #define STATIC static
 
 typedef struct
@@ -34,6 +37,7 @@ STATIC unsigned char Console_cmdHelp(int client, unsigned char *Cmd, unsigned ch
 STATIC unsigned char *RemoveSpaces (unsigned char *Command);
 STATIC unsigned char Console_cmdAD82010(int client, unsigned char *Cmd, unsigned char *Parms);
 STATIC unsigned char Console_setGPIO(int client, unsigned char *Cmd, unsigned char *Parms);
+STATIC unsigned char Console_eeprom(int client, unsigned char *Cmd, unsigned char *Parms);
 
 static const UART_CMDS UartCommands[] =
 {
@@ -41,8 +45,49 @@ static const UART_CMDS UartCommands[] =
     {"help",    "Print this message",               Console_cmdHelp},
     {"gpio",    "gpio control for on/off",          Console_setGPIO},
     {"amp",     "control for DAMP ad82010",         Console_cmdAD82010},
+    {"eeprom",  "save eeprom or load data",         Console_eeprom},
     {"",        "",                                 NULL}
 };
+
+
+unsigned char binBuf[16] = {0,};
+unsigned int AddrCnt = 0;
+STATIC unsigned char Console_eeprom(int client, unsigned char *Cmd, unsigned char *Parms)
+{
+    unsigned char RetVal = 0, uStep, value = 0;
+    unsigned char ReadBuf[16] = {0,};
+
+    if(!strncmp((char *)Parms, "write", uStep = strlen("write")))
+    {
+        EEPROM_WriteBufData(AddrCnt, binBuf, 16);
+        message(client, "*** eeprom write ***\n");
+    }
+    else if(!strncmp((char *)Parms, "read", uStep = strlen("read")))
+    {
+        EEPROM_ReadBufData(AddrCnt, ReadBuf, 16);
+        for(int cnt1 = 0; cnt1 < 16; cnt1 += 1)
+        {
+            printf("ReadBuf[%d]:%02X\n\r", cnt1, ReadBuf[cnt1]);
+        }
+        message(client, "*** eeprom read ***\n");
+    }
+    else if(!strncmp((char *)Parms, "rand", uStep = strlen("rand")))
+    {
+        for(int cnt = 0; cnt < 16; cnt += 1)
+        {
+            binBuf[cnt] =rand()%256;
+            printf("binBuf[%d]:%02X\n\r", cnt, binBuf[cnt]);
+        }
+        message(client, "*** eeprom random ***\n");
+    }
+    else
+    {
+        message(client, "*** Unknown command! ***\n");
+    }
+
+    return (RetVal);
+}
+
 
 STATIC unsigned char Console_setGPIO(int client, unsigned char *Cmd, unsigned char *Parms)
 {
@@ -332,17 +377,22 @@ int CommandHandler(int client, unsigned char *Command)
 // Checks to see if the command is one that is understood by the server
 int processBBBCommand(int client, char *command){
    int return_val = -1;
-   if (strcmp(command, "LED on")==0){
+   //if (strcmp(command, "LED on")==0){
+   if(!strncmp((char *)command, "LED on", strlen("LED on"))) {
       return_val = message(client, (char *)"*** Turning the LED on  ***\n");
+      //printf("*** Turning the LED on  ***\n");
    }
-   else if(strcmp(command, "LED off")==0){
+   else if(!strncmp((char *)command, "LED off", strlen("LED off"))) {
       return_val = message(client, "*** Turning the LED off ***\n");
+//      printf("*** Turning the LED off  ***\n");
    }
-   else if(strcmp(command, "quit")==0){
+   else if(strncmp((char *)command, "quit", strlen("quit"))) {
       return_val = message(client, "*** Killing the BBB Serial Server ***\n");
+//      printf("*** Killing the BBB Serial Server ***\n");
    }
    else {
       return_val = message(client, "*** Unknown command! ***\n");
+//      printf("*** Unknown command!***\n");
    }
    return return_val;
 }
@@ -378,25 +428,29 @@ void* Console_TaskMain(void *pArg)
       return NULL;
    }
 
-   // Loop forever until the quit command is sent from the client or
-   //  Ctrl-C is pressed on the server console
-   do {
-      if(read(client,&c,1)>0){
-          write(STDOUT_FILENO,&c,1);
-          command[count++]=c;
-          if(c=='\n'){
-             command[count-1]='\0';   //replace /n with /0
-//             processBBBCommand(client, (char *)command);
-             CommandHandler(client, command);
-             count=0;                 //reset the command string for the next command
+   //while(1)
+   {
+       // Loop forever until the quit command is sent from the client or
+       //  Ctrl-C is pressed on the server console
+       do {
+          if(read(client,&c,1)>0){
+              write(STDOUT_FILENO,&c,1);
+              command[count++]=c;
+              if(c=='\n' || c=='\r'){
+                 command[count-1]='\0';   //replace /n with /0
+//                 processBBBCommand(client, (char *)command);
+                 CommandHandler(client, command);
+                 count=0;                 //reset the command string for the next command
+              }
           }
-      }
-      if(read(STDIN_FILENO,&c,1)>0){  //can send text from stdin to client machine
-          write(client,&c,1);
-      }
-   }
-   while(strcmp((char *)command,"quit")!=0);
+          if(read(STDIN_FILENO,&c,1)>0){  //can send text from stdin to client machine
+              write(client,&c,1);
+          }
+       }
+       while(strcmp((char *)command,"quit")!=0);
 
-   close(client);
+       close(client);
+   }
+
    return 0;
 }
