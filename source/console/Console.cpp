@@ -52,6 +52,7 @@ static const UART_CMDS UartCommands[] =
 
 unsigned char binBuf[16] = {0,};
 unsigned int AddrCnt = 0;
+char printbuf[100] = {0,};
 STATIC unsigned char Console_eeprom(int client, unsigned char *Cmd, unsigned char *Parms)
 {
     unsigned char RetVal = 0, uStep, value = 0;
@@ -59,8 +60,24 @@ STATIC unsigned char Console_eeprom(int client, unsigned char *Cmd, unsigned cha
 
     if(!strncmp((char *)Parms, "write", uStep = strlen("write")))
     {
+        for(int cnt = 0; cnt < 16; cnt += 1)
+        {
+            binBuf[cnt] =rand()%256;
+            printf("binBuf[%d]:%02X\n", cnt, binBuf[cnt]);
+        }
+
+        usleep(1000);
         EEPROM_WriteBufData(AddrCnt, binBuf, 16);
         message(client, "*** eeprom write ***\n");
+        usleep(1000);
+#if 1
+        memset(printbuf, 0, sizeof(printbuf));
+        sprintf(printbuf, "%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",\
+                          binBuf[0],binBuf[1],binBuf[2],binBuf[3],binBuf[4],binBuf[5],binBuf[6],binBuf[7],\
+                          binBuf[8],binBuf[9],binBuf[10],binBuf[11],binBuf[12],binBuf[13],binBuf[14],binBuf[15]);
+        //message(client, (char *)printbuf);
+        printf("%s", printbuf);
+#endif
     }
     else if(!strncmp((char *)Parms, "read", uStep = strlen("read")))
     {
@@ -76,7 +93,7 @@ STATIC unsigned char Console_eeprom(int client, unsigned char *Cmd, unsigned cha
         for(int cnt = 0; cnt < 16; cnt += 1)
         {
             binBuf[cnt] =rand()%256;
-            printf("binBuf[%d]:%02X\n\r", cnt, binBuf[cnt]);
+            printf("binBuf[%d]:%02X\n", cnt, binBuf[cnt]);
         }
         message(client, "*** eeprom random ***\n");
     }
@@ -132,7 +149,7 @@ STATIC unsigned char Console_cmdHelp(int client, unsigned char *Cmd, unsigned ch
         //DBG("  %s\n\r", UartCommands[i].CmdHelp);
         //message("  %s\n\r", UartCommands[i].CmdHelp);
         message(client,  (char *)UartCommands[i].CmdHelp);
-        message(client,  (char *)"\n\r");
+        message(client,  (char *)"\n");
         i++;
     }
     //DBG("\n\r");
@@ -340,7 +357,7 @@ static unsigned char *RemoveSpaces (unsigned char *Command)
  *
  *
  *===========================================================================*/
-int CommandHandler(int client, unsigned char *Command)
+void CommandHandler(int client, unsigned char *Command)
 {
     int return_val = -1;
     unsigned char i=0, Len, *Cmd;

@@ -214,7 +214,7 @@ namespace cacaosd_i2cport {
         memcpy(&buffer[1], data, length);
 
         // Write register address
-        if (write(this->file_descriptor, buffer, 2+length) != 2+length) {
+        if (write(this->file_descriptor, buffer, 1+length) != 1+length) {
             msg_error("Can not write data. Address %d.", device_address);
         }
 
