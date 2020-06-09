@@ -20,10 +20,12 @@
 
 #include <ssdp/ssdp.h>
 
+#include <protocol/protocol.h>
+
 #define BUF_SIZE  1024
 
 // SSDP packet data structure
-//#pragma pack(push,1)
+#pragma pack(push,1)
 typedef struct _device_descriptor_t
 {
     int8_t  unique_header[0x4];
@@ -36,7 +38,7 @@ typedef struct _device_descriptor_t
     int8_t  device_name[0x10];
     int8_t  model_name[0x10];
     int8_t  serial_number[0x10];
-} device_descriptor_t /*__attribute__ ((__packed__))*/;
+} device_descriptor_t __attribute__ ((__packed__));
 
 device_descriptor_t st_packet;
 /*device_descriptor_t st_packet = {
@@ -146,6 +148,7 @@ void* thread_PollingUpdate(void* ptr)
 #define BUF_SIZE 1024
 void error_handling(char *message);
 
+#if 0 // moved to protocol.cpp
 //int main(int argc, char *argv[])
 int TCP_Connection(struct sockaddr_in *from_addr)
 {
@@ -178,6 +181,7 @@ int TCP_Connection(struct sockaddr_in *from_addr)
     //close(sock);
     return 0;
 }
+#endif
 
 void error_handling(char *message)
 {
@@ -282,15 +286,26 @@ void* thread_SSDPReceiver(void* ptr)
       printf("from_adr.sin_addr:%08X\n", from_adr.sin_addr.s_addr);
       #endif
 
-      if(from_adr.sin_addr.s_addr != 0)  // add more conditions
+      // check header
+      if(strstr((char*)st_packet.unique_header, "PARC") != 0)
       {
-        if(TCP_Connection(&from_adr) == 0)
-        {
-          ssdp_skip_flag = 1;
-          // break;
-        }
-      }
+          if(from_adr.sin_addr.s_addr != 0)  // add more conditions
+          {
+            //if(TCP_Connection(&from_adr) == 0)
+            if(TCP_Connection(&from_adr) == 0)
+            {
+              ssdp_skip_flag = 1;
 
+              std::string ipaddr = "";
+              protocol_TcpIPConnect(std::to_string(from_adr.sin_addr.s_addr), );
+              // break;
+            }
+          }
+          else
+          {
+              ssdp_skip_flag = 0;
+          }
+      }
       // Clear temp buffer data
       memset(message, 0, BUF_SIZE);
     }

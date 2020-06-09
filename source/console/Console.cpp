@@ -21,8 +21,8 @@ extern void GPIOCtrl_SetOut(GPIO_VALUE value);
 extern void GPIOCtrl_swingPort(void);
 
 //#define MODEMDEVICE "/dev/ttyO2" //Beaglebone Black serial port
-//#define MODEMDEVICE "/dev/ttyO0" //Beaglebone Black serial port
-#define MODEMDEVICE "/dev/ttyO4" //Beaglebone Black serial port
+#define MODEMDEVICE "/dev/ttyO0" //Beaglebone Black serial port
+//#define MODEMDEVICE "/dev/ttyO4" //Beaglebone Black serial port
 #define STATIC static
 
 typedef struct
@@ -38,6 +38,7 @@ STATIC unsigned char *RemoveSpaces (unsigned char *Command);
 STATIC unsigned char Console_cmdAD82010(int client, unsigned char *Cmd, unsigned char *Parms);
 STATIC unsigned char Console_setGPIO(int client, unsigned char *Cmd, unsigned char *Parms);
 STATIC unsigned char Console_eeprom(int client, unsigned char *Cmd, unsigned char *Parms);
+STATIC unsigned char Console_setMRX(int client, unsigned char *Cmd, unsigned char *Parms);
 
 static const UART_CMDS UartCommands[] =
 {
@@ -46,6 +47,7 @@ static const UART_CMDS UartCommands[] =
     {"gpio",    "gpio control for on/off",          Console_setGPIO},
     {"amp",     "control for DAMP ad82010",         Console_cmdAD82010},
     {"eeprom",  "save eeprom or load data",         Console_eeprom},
+    {"mrx",     "mrx control setting",              Console_setMRX},
     {"",        "",                                 NULL}
 };
 
@@ -326,6 +328,28 @@ STATIC unsigned char Console_cmdAD82010(int client, unsigned char *Cmd, unsigned
     return (RetVal);
 }
 
+STATIC unsigned char Console_setMRX(int client, unsigned char *Cmd, unsigned char *Parms)
+{
+    unsigned char RetVal = 0, uStep, value = 0;
+    if(!strncmp((char *)Parms, "volup", uStep = strlen("volup")))
+    {
+        message(client, "*** MRX VOLUME UP ***\n");
+    }
+    else if(!strncmp((char *)Parms, "voldw", uStep = strlen("voldw")))
+    {
+        message(client, "*** MRX VOLUME DOWN ***\n");
+    }
+    else if(!strncmp((char *)Parms, "mute", uStep = strlen("mute")))
+    {
+        message(client, "*** MUTE TOGGLE ***\n");
+    }
+    else
+    {
+        message(client, "*** Unknown command! ***\n");
+    }
+
+    return (RetVal);
+}
 // Sends a message to the client and displays the message on the console
 int message(int client, const char *message)
 {

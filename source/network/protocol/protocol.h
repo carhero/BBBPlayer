@@ -22,4 +22,5 @@ void func_VOLSET(char *msg);
 void func_GPIOSET(char *msg);
 void func_MUTE(char *msg);
 
+void protocol_TcpIPConnect(string IPAddr, int port);
 #endif /* SOURCE_NETWORK_PROTOCOL_PROTOCOL_H_ */

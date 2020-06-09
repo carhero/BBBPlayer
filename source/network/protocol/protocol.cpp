@@ -8,6 +8,13 @@
 #include "GPIOCtrl.h"
 #include "gpio/GPIO.h"
 
+// Network API
+#include <iostream>
+#include "network/socketlib/SocketClient.h"
+using namespace std;
+using namespace exploringBB;
+
+
 unsigned int msgTblCnt = 0;
 
 MSG_PROTOCOL msgTbl[] = {
@@ -16,6 +23,56 @@ MSG_PROTOCOL msgTbl[] = {
 {func_MUTE,     "MUTE"},
 };
 pMSG_PROTOCOL psmsgTbl;
+
+SocketClient sc;
+
+void protocol_TcpIPConnect(string IPAddr, int port)
+{
+    sc(IPAddr, port);
+    sc.connectToServer();
+
+    if(sc.isClientConnected()) {
+        printf("TCP connected, protocol send is ready\n");
+    }
+    else {
+        printf("TCP is not connected, Please retry\n");
+    }
+    //string message("Hello from the Client");
+    //cout << "Sending [" << message << "]" << endl;
+    //sc.send(message);
+}
+
+int protocol_TcpIPConnect(struct sockaddr_in *from_addr)
+{
+    // int sock;
+    char message[BUF_SIZE];
+    int str_len;
+    struct sockaddr_in serv_adr;
+
+  char *TDP_PORT = "14999";
+
+    sock=socket(PF_INET, SOCK_STREAM, 0);
+    if(sock==-1)
+        error_handling("socket() error");
+
+    memset(&serv_adr, 0, sizeof(serv_adr));
+    serv_adr.sin_family=AF_INET;
+    serv_adr.sin_addr.s_addr=from_addr->sin_addr.s_addr; //inet_addr(argv[1]);
+    serv_adr.sin_port=htons(atoi(TDP_PORT));
+
+    if(connect(sock, (struct sockaddr*)&serv_adr, sizeof(serv_adr))==-1)
+  {
+    error_handling("connect() error!");
+  }
+    else
+  {
+    puts("Connected...........");
+    printf("TCP Server IP : %08X\n\r",serv_adr.sin_addr.s_addr);
+  }
+
+    //close(sock);
+    return 0;
+}
 
 void protocol_init()
 {
@@ -85,3 +142,4 @@ void func_MUTE(char *msg)
       AD820xx_SetMasterMute(0);
     }
 }
+
