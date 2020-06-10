@@ -17,6 +17,8 @@ using namespace exploringBB;
 
 unsigned int msgTblCnt = 0;
 
+#define BUF_SIZE  1024
+
 MSG_PROTOCOL msgTbl[] = {
 {func_VOLSET,   "VOL"},
 {func_GPIOSET,  "GPIO"},
@@ -24,28 +26,20 @@ MSG_PROTOCOL msgTbl[] = {
 };
 pMSG_PROTOCOL psmsgTbl;
 
-SocketClient sc;
+//SocketClient sc;
+int sock;
 
-void protocol_TcpIPConnect(string IPAddr, int port)
+static void error_handling(char *message)
 {
-    sc(IPAddr, port);
-    sc.connectToServer();
-
-    if(sc.isClientConnected()) {
-        printf("TCP connected, protocol send is ready\n");
-    }
-    else {
-        printf("TCP is not connected, Please retry\n");
-    }
-    //string message("Hello from the Client");
-    //cout << "Sending [" << message << "]" << endl;
-    //sc.send(message);
+    fputs(message, stderr);
+    fputc('\n', stderr);
+    exit(1);
 }
 
 int protocol_TcpIPConnect(struct sockaddr_in *from_addr)
 {
     // int sock;
-    char message[BUF_SIZE];
+    char message[BUF_SIZE] = {0,};
     int str_len;
     struct sockaddr_in serv_adr;
 
@@ -61,14 +55,19 @@ int protocol_TcpIPConnect(struct sockaddr_in *from_addr)
     serv_adr.sin_port=htons(atoi(TDP_PORT));
 
     if(connect(sock, (struct sockaddr*)&serv_adr, sizeof(serv_adr))==-1)
-  {
-    error_handling("connect() error!");
-  }
+    {
+        error_handling("connect() error!");
+    }
     else
-  {
-    puts("Connected...........");
-    printf("TCP Server IP : %08X\n\r",serv_adr.sin_addr.s_addr);
-  }
+    {
+        puts("Connected...........");
+        printf("TCP Server IP : %08X\n\r",serv_adr.sin_addr.s_addr);
+        //sendto(sock, "Z1VOLUP;", sizeof("Z1VOLUP;"), 0, (struct sockaddr*)&serv_adr, sizeof(serv_adr));
+        strcpy(message, "Z1VOLUP;");
+        //send (int __fd, const void *__buf, size_t __n, int __flags);
+        send(sock, (char *)message, sizeof(message), 0);
+        printf("message : %s\n\r",message);
+    }
 
     //close(sock);
     return 0;

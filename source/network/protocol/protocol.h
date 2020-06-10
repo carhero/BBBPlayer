@@ -8,6 +8,16 @@
 #ifndef SOURCE_NETWORK_PROTOCOL_PROTOCOL_H_
 #define SOURCE_NETWORK_PROTOCOL_PROTOCOL_H_
 
+// network define
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <net/if.h>
+#include <dlfcn.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+
 typedef struct _MSG_PROTOCOL
 {
     void(*callback)(char *);
@@ -22,5 +32,5 @@ void func_VOLSET(char *msg);
 void func_GPIOSET(char *msg);
 void func_MUTE(char *msg);
 
-void protocol_TcpIPConnect(string IPAddr, int port);
+int protocol_TcpIPConnect(struct sockaddr_in *from_addr);
 #endif /* SOURCE_NETWORK_PROTOCOL_PROTOCOL_H_ */

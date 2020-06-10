@@ -25,7 +25,7 @@
 #define BUF_SIZE  1024
 
 // SSDP packet data structure
-#pragma pack(push,1)
+//#pragma pack(push,1)
 typedef struct _device_descriptor_t
 {
     int8_t  unique_header[0x4];
@@ -38,7 +38,7 @@ typedef struct _device_descriptor_t
     int8_t  device_name[0x10];
     int8_t  model_name[0x10];
     int8_t  serial_number[0x10];
-} device_descriptor_t __attribute__ ((__packed__));
+} device_descriptor_t; //__attribute__ ((__packed__));
 
 device_descriptor_t st_packet;
 /*device_descriptor_t st_packet = {
@@ -63,7 +63,8 @@ pthread_t th_SSDPReceiver;  // network SSDP serch msg receiver thread
 // Socket variable
 char message[BUF_SIZE];
 int ssdp_skip_flag = 0;
-int Usock = 0, sock = 0;  // UDP, TCP socket
+int Usock = 0; //sock = 0;  // UDP, TCP socket
+extern int sock;    // moved to protocol.c
 struct sockaddr_in serv_addr,from_adr;
 socklen_t adr_sz;
 
@@ -102,8 +103,8 @@ void CopyJsonBuffer(const char *pBuf, unsigned int Length)
 // ------------------------------------------------
 void* thread_PollingUpdate(void* ptr)
 {
-  unsigned int BufCnt = 0;
-  unsigned int cnt = 0;
+  //unsigned int BufCnt = 0;
+  //unsigned int cnt = 0;
   printf("thread_PollingUpdate init...\n");
 
   while(1)
@@ -146,7 +147,7 @@ void* thread_PollingUpdate(void* ptr)
 // TEST Code for TCP Connection with MRX
 // ------------------------------------------------
 #define BUF_SIZE 1024
-void error_handling(char *message);
+static void error_handling(char *message);
 
 #if 0 // moved to protocol.cpp
 //int main(int argc, char *argv[])
@@ -183,7 +184,7 @@ int TCP_Connection(struct sockaddr_in *from_addr)
 }
 #endif
 
-void error_handling(char *message)
+static void error_handling(char *message)
 {
     fputs(message, stderr);
     fputc('\n', stderr);
@@ -232,7 +233,7 @@ static int MSearchMessageDataSend(void)
 
 void* thread_SSDPSender(void* ptr)
 {
-  unsigned int cnt = 0;
+  //unsigned int cnt = 0;
   printf("thread_SSDPSender init...\n");
 
   while(1)
@@ -254,8 +255,8 @@ void* thread_SSDPSender(void* ptr)
 
 void* thread_SSDPReceiver(void* ptr)
 {
-  unsigned int cnt = 0;
-  int count1;
+  //unsigned int cnt = 0;
+  //int count1;
 
   printf("thread_SSDPReceiver init...\n");
 
@@ -292,12 +293,9 @@ void* thread_SSDPReceiver(void* ptr)
           if(from_adr.sin_addr.s_addr != 0)  // add more conditions
           {
             //if(TCP_Connection(&from_adr) == 0)
-            if(TCP_Connection(&from_adr) == 0)
+            if(protocol_TcpIPConnect(&from_adr) == 0)
             {
               ssdp_skip_flag = 1;
-
-              std::string ipaddr = "";
-              protocol_TcpIPConnect(std::to_string(from_adr.sin_addr.s_addr), );
               // break;
             }
           }
