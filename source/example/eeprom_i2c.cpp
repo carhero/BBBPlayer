@@ -2,13 +2,13 @@
  * eeprom_i2c.cpp
  *
  *  Created on: May 13, 2019
- *      Author: Administrator
+ *      Author: Y.H.Cha
  */
 
+#include <stdio.h>
 #include <string.h>
 #include "../drivers/i2c/I2cPort.h"
 #include <iostream>
-#include <string.h>
 
 using namespace cacaosd_i2cport;
 

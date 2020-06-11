@@ -31,6 +31,10 @@
 #include <netdb.h>
 #include <string>
 
+#include <unistd.h>
+#include <arpa/inet.h>
+//#include <sys/socket.h>
+
 namespace exploringBB {
 
 class SocketClient {

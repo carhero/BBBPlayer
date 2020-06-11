@@ -63,9 +63,10 @@ int protocol_TcpIPConnect(struct sockaddr_in *from_addr)
         puts("Connected...........");
         printf("TCP Server IP : %08X\n\r",serv_adr.sin_addr.s_addr);
         //sendto(sock, "Z1VOLUP;", sizeof("Z1VOLUP;"), 0, (struct sockaddr*)&serv_adr, sizeof(serv_adr));
-        strcpy(message, "Z1VOLUP;");
+        strcpy(message, "Z1VOL-35;");
         //send (int __fd, const void *__buf, size_t __n, int __flags);
-        send(sock, (char *)message, sizeof(message), 0);
+        //send(sock, (char *)message, sizeof(message), 0);
+        write(sock, message, strlen(message));
         printf("message : %s\n\r",message);
     }
 

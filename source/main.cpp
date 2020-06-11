@@ -9,6 +9,7 @@
 #include "threads/Threads.h"
 #include "network/ssdp/ssdp.h"
 #include "../example/eeprom_i2c.h"
+#include "include/user_conf.h"
 //#include "network/socket_server/ssdp_server.h"
 //#include <linux/gpio.h>       // Required for the GPIO functions
 
