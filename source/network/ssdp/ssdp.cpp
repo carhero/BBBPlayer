@@ -19,7 +19,6 @@
 #include <dlfcn.h>
 
 #include <ssdp/ssdp.h>
-
 #include <protocol/protocol.h>
 
 #define BUF_SIZE  1024
@@ -59,6 +58,7 @@ unsigned int JsonFlagUpdate;
 pthread_t th_PollUpdate;    // polling update thread
 pthread_t th_SSDPSender;    // network SSDP serch msg sending thread
 pthread_t th_SSDPReceiver;  // network SSDP serch msg receiver thread
+pthread_t th_TCPServer;  // network SSDP serch msg receiver thread
 
 // Socket variable
 char message[BUF_SIZE];

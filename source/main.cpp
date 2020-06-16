@@ -22,9 +22,11 @@ int main(void)
     Init_CreateThreads();
 
     // Init Network
-    SSDP_Init();
+//    SSDP_Init();
 
+#if (__BBB_FUNC_EEPROM__)
     EEPROM_I2CInit();
+#endif
 
     while (1);
 

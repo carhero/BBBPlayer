@@ -10,4 +10,5 @@
 
 void* Console_TaskMain(void* pArg);
 void* uart_TaskMain(void* pArg);
+void Console_msgParser(char *command);
 #endif /* SOURCE_CONSOLE_CONSOLE_H_ */

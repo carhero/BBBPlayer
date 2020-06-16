@@ -10,9 +10,10 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <socket_server/ssdp_server.h>
-#include <socket_server/tcp_server.h>
-
+#include <tcpserver/tcp_server.h>
+#include <ssdp/ssdp.h>
 #include "../console/console.h"
+#include "include/user_conf.h"
 //#include "/drivers/uart/BBBEcho.h"
 
 
@@ -37,6 +38,21 @@ void* bar(void* ptr)
 	return 0;
 }
 
+static void* CreateThread_SSDP(void* ptr)
+{
+	SSDP_Init();
+	return 0;
+}
+
+#if 0 /* yhcha, Jun 15 2020 : Block */
+static void* CreateThread_SSDP(void* ptr)
+{
+	SSDP_Init();
+	return 0;
+}
+#endif
+
+//
 
 //extern void* uart_TaskMain(void* pArg);
 
@@ -55,9 +71,17 @@ int Init_CreateThreads(void)
 
   printf("main, foo and bar now execute concurrently...\n");
 //  iret1 = pthread_create( &first, NULL, foo, NULL);
-//  iret2 = pthread_create( &second, NULL, TCP_ServerMain, NULL);
+#if (__BBB_FUNC_TCPSERVER__)
+  iret2 = pthread_create( &second, NULL, TCP_ServerMain, NULL);
+#endif
+
+#if (__BBB_FUNC_CONSOLE__)
   iret3 = pthread_create( &third, NULL, Console_TaskMain, NULL);
-//  iret4 = pthread_create( &fourth, NULL, SSDP_Init, NULL);
+#endif
+
+#if (__BBB_FUNC_SSDP__)
+  iret4 = pthread_create( &fourth, NULL, CreateThread_SSDP, NULL);
+#endif
 
 //  iret4 = pthread_create( &fourth, NULL, uart_TaskMain, NULL);
 
@@ -65,10 +89,10 @@ int Init_CreateThreads(void)
   //pthread_join(first, NULL);                // pauses until first finishes
   //pthread_join(second, NULL);               // pauses until second finishes
 
-  printf("Thread 1 returns: %d\n",iret1);
-  printf("Thread 2 returns: %d\n",iret2);
-  printf("Thread 3 returns: %d\n",iret3);
-  printf("Thread 4 returns: %d\n",iret4);
+  printf("Thread 1:NULL\n");
+  printf("Thread 2:TCP_ServerMain\n");
+  printf("Thread 3:Console_TaskMain\n");
+  printf("Thread 4:CreateThread_SSDP\n");
 
   return 0;
 }

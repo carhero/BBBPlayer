@@ -20,6 +20,8 @@ using namespace exploringBB;
 extern void GPIOCtrl_SetOut(GPIO_VALUE value);
 extern void GPIOCtrl_swingPort(void);
 
+extern int sock;
+
 //#define MODEMDEVICE "/dev/ttyO2" //Beaglebone Black serial port
 #define MODEMDEVICE "/dev/ttyO0" //Beaglebone Black serial port
 //#define MODEMDEVICE "/dev/ttyO4" //Beaglebone Black serial port
@@ -114,14 +116,17 @@ STATIC unsigned char Console_setGPIO(int client, unsigned char *Cmd, unsigned ch
     if(!strncmp((char *)Parms, "on", uStep = strlen("on")))
     {
         GPIOCtrl_SetOut(HIGH);
+	message(client, "GPIO ON\n");
     }
     else if(!strncmp((char *)Parms, "off", uStep = strlen("off")))
     {
         GPIOCtrl_SetOut(LOW);
+	message(client, "GPIO OFF\n");
     }
     else if(!strncmp((char *)Parms, "swing", uStep = strlen("swing")))
     {
         GPIOCtrl_swingPort();
+	message(client, "GPIO SWING\n");
     }
     else
     {
@@ -334,18 +339,29 @@ STATIC unsigned char Console_setMRX(int client, unsigned char *Cmd, unsigned cha
     if(!strncmp((char *)Parms, "volup", uStep = strlen("volup")))
     {
         message(client, "*** MRX VOLUME UP ***\n");
+        printf("MRX VOLUME UP\n\r");
     }
     else if(!strncmp((char *)Parms, "voldw", uStep = strlen("voldw")))
     {
         message(client, "*** MRX VOLUME DOWN ***\n");
+        printf("MRX VOLUME DOWN\n\r");
     }
     else if(!strncmp((char *)Parms, "mute", uStep = strlen("mute")))
     {
         message(client, "*** MUTE TOGGLE ***\n");
+        printf("MUTE TOGGLE\n\r");
+    }
+    else if(!strncmp((char *)Parms, "cmd", uStep = strlen("cmd")))
+    {
+        Parms += uStep+1;
+        message(client, "CMD\n");
+        write(sock, (char*)Parms, strlen((char*)Parms));
+        printf("CMD:%s\n\r", (char*)Parms);
     }
     else
     {
         message(client, "*** Unknown command! ***\n");
+        printf("Unknown command!\n\r");
     }
 
     return (RetVal);
@@ -376,6 +392,19 @@ static unsigned char *RemoveSpaces (unsigned char *Command)
     return (Command);
 }
 
+static void RemoveNonASCII(char *buffer, unsigned int length)
+{
+	while(length)
+	{
+		length -= 1;
+		if(buffer[length] < ' ')
+		{
+			buffer[length] = 0;
+		}
+	}
+}
+
+
 /*============================================================================
  *
  *
@@ -385,6 +414,8 @@ void CommandHandler(int client, unsigned char *Command)
 {
     int return_val = -1;
     unsigned char i=0, Len, *Cmd;
+
+    RemoveNonASCII((char*)Command, strlen((char*)Command));
 
     Command = RemoveSpaces (Command);
     while (UartCommands[i].CmdHandler)
@@ -439,10 +470,16 @@ int processBBBCommand(int client, char *command){
 }
 #endif
 
+int client = 0;
+void Console_msgParser(char *command)
+{
+    CommandHandler(client, (unsigned char *)command);
+}
+
 // The main application. Must be run as root and must pass the terminal name.
 void* Console_TaskMain(void *pArg)
 {
-   int client, count=0;
+   int /*client,*/ count=0;
    unsigned char c;
    unsigned char *command = (unsigned char *)malloc(255);
 //   char *command = (char *)malloc(255);
@@ -469,29 +506,56 @@ void* Console_TaskMain(void *pArg)
       return NULL;
    }
 
+   // Loop forever until the quit command is sent from the client or
+   //  Ctrl-C is pressed on the server console
+   do {
+      if(read(client,&c,1)>0){
+          write(STDOUT_FILENO,&c,1);
+          command[count++]=c;
+          if(c=='\n'){
+             command[count-1]='\0';   //replace /n with /0
+             //processBBBCommand(client, command);
+             CommandHandler(client, (unsigned char *)command);
+             count=0;                 //reset the command string for the next command
+          }
+      }
+      if(read(STDIN_FILENO,&c,1)>0){  //can send text from stdin to client machine
+          write(client,&c,1);
+      }
+   }
+   while(strcmp((char *)command,"quit")!=0);
+   free(command);
+   command = NULL;
+
+#if 0 /* yhcha, Jun 15 2020 : Block */
    //while(1)
    {
        // Loop forever until the quit command is sent from the client or
        //  Ctrl-C is pressed on the server console
        do {
           if(read(client,&c,1)>0){
-              write(STDOUT_FILENO,&c,1);
+              write(client,&c,1);
               command[count++]=c;
               if(c=='\n' || c=='\r'){
                  command[count-1]='\0';   //replace /n with /0
 //                 processBBBCommand(client, (char *)command);
                  CommandHandler(client, command);
                  count=0;                 //reset the command string for the next command
+                 message(client, "*** count reset***\n");
               }
           }
           if(read(STDIN_FILENO,&c,1)>0){  //can send text from stdin to client machine
+          //if(read(client,&c,1)>0){  //can send text from stdin to client machine
               write(client,&c,1);
           }
        }
        while(strcmp((char *)command,"quit")!=0);
-
        close(client);
+
+	free(command);
+	command = NULL;
    }
+#endif
 
    return 0;
 }

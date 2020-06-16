@@ -9,9 +9,15 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#include <protocol/protocol.h>
-#include <socket_server/tcp_server.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <net/if.h>
+#include <dlfcn.h>
+
+#include <console/console.h>
+#include <protocol/protocol.h>
+//#include <network/socket_server/tcp_server.h>
 
 
 #define BUF_SIZE 1024
@@ -71,7 +77,8 @@ void *TCP_ServerMain(void *pArg)
             write(clnt_sock, message, str_len);
 
             // PARSER system callback functions
-            MessageParser(message);
+            Console_msgParser(message);
+
 
             memset(message, 0, sizeof(message));
         }
@@ -89,6 +96,4 @@ static void error_handling(char *message)
     fputc('\n', stderr);
     exit(1);
 }
-
-
 
