@@ -10,7 +10,7 @@ void System_Init()
     printf("System_Init\n");
 
     // GPIOCtrl_Init
-    GPIOCtrl_Init();
+    //GPIOCtrl_Init();
 
     // Volume Init
     //AD820xx_Init();

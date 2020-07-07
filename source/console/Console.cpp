@@ -11,6 +11,8 @@
 #include<string.h>
 #include<stdlib.h>
 #include<unistd.h>
+//#include<stdlib.h>
+#include<cstdlib>
 #include"AD820xx.h"
 #include"../drivers/gpio/GPIO.h"
 #include"../example/eeprom_i2c.h"
@@ -41,6 +43,7 @@ STATIC unsigned char Console_cmdAD82010(int client, unsigned char *Cmd, unsigned
 STATIC unsigned char Console_setGPIO(int client, unsigned char *Cmd, unsigned char *Parms);
 STATIC unsigned char Console_eeprom(int client, unsigned char *Cmd, unsigned char *Parms);
 STATIC unsigned char Console_setMRX(int client, unsigned char *Cmd, unsigned char *Parms);
+STATIC unsigned char Console_runBinary(int client, unsigned char *Cmd, unsigned char *Parms);
 
 static const UART_CMDS UartCommands[] =
 {
@@ -50,9 +53,42 @@ static const UART_CMDS UartCommands[] =
     {"amp",     "control for DAMP ad82010",         Console_cmdAD82010},
     {"eeprom",  "save eeprom or load data",         Console_eeprom},
     {"mrx",     "mrx control setting",              Console_setMRX},
+	{"bin",     "execute external binary",          Console_runBinary},
     {"",        "",                                 NULL}
 };
 
+STATIC unsigned char Console_runBinary(int client, unsigned char *Cmd, unsigned char *Parms)
+{
+	int status = 0;
+    unsigned char RetVal = 0, uStep, value = 0;
+    if(!strncmp((char *)Parms, "echo_server", uStep = strlen("echo_server")))
+    {
+        message(client, "*** execute external binary ***\n");
+        printf("run echo_server\n\r");
+
+        status = system("/home/rock/echo_server_r1 15000 &");
+        printf("status:%d\n",status);
+
+        // Create Child Processor
+        /*if(fork() == 0){
+			// Child process will return 0 from fork()
+			printf("I'm the child process.\n");
+			status = system("/home/rock/echo_server_r1 14999");
+			printf("status:%d\n",status);
+			exit(0);
+		}else{
+			// Parent process will return a non-zero value from fork()
+			printf("I'm the parent.\n");
+		}*/
+    }
+    else
+    {
+        message(client, "*** Unknown command! ***\n");
+        printf("Unknown command!\n\r");
+    }
+
+    return (RetVal);
+}
 
 unsigned char binBuf[16] = {0,};
 unsigned int AddrCnt = 0;

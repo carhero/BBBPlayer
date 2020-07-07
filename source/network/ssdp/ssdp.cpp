@@ -262,6 +262,9 @@ void* thread_SSDPReceiver(void* ptr)
 
   while(1)
   {
+	  char device_name[20] = {0,};
+	  char model_name[20] = {0,};
+	  char serial_number[20] = {0,};
     int ret = 0;
     // If TCP connection is estbalished, then it should be skipped.
     while(ssdp_skip_flag)  // If have tcp connection with MRX, then this flag is set to 1
@@ -278,12 +281,18 @@ void* thread_SSDPReceiver(void* ptr)
     if(ret > 0)
     {
       #if 1 // debug
+    	memset(device_name, 0, sizeof(device_name));
+    	memset(model_name, 0, sizeof(model_name));
+    	memset(serial_number, 0, sizeof(serial_number));
+    	memcpy(device_name, st_packet.device_name, sizeof(st_packet.device_name));
+    	memcpy(model_name, st_packet.model_name, sizeof(st_packet.model_name));
+    	memcpy(serial_number, st_packet.serial_number, sizeof(st_packet.serial_number));
       printf("rev size : %d\n", ret);
       printf("unique_header:%s\n", st_packet.unique_header);
       printf("tcp_ip_port:%d\n", st_packet.tcp_ip_port);
-      printf("device_name:%s\n", st_packet.device_name);
-      printf("model_name:%s\n", st_packet.model_name);
-      printf("serial_number:%s\n", st_packet.serial_number);
+      printf("device_name:%s\n", device_name);
+      printf("model_name:%s\n", model_name);
+      printf("serial_number:%s\n", serial_number);
       printf("from_adr.sin_addr:%08X\n", from_adr.sin_addr.s_addr);
       #endif
 

@@ -4,7 +4,7 @@
  *  Created on: Nov 29, 2017
  *      Author: Administrator
  */
-
+#include <cstdio>
 #include "system/system.h"
 #include "threads/Threads.h"
 #include "network/ssdp/ssdp.h"
@@ -12,6 +12,7 @@
 #include "include/user_conf.h"
 //#include "network/socket_server/ssdp_server.h"
 //#include <linux/gpio.h>       // Required for the GPIO functions
+
 
 int main(void)
 {
@@ -32,4 +33,3 @@ int main(void)
 
     return 0;
 }
-
