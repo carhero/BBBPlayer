@@ -198,6 +198,21 @@ namespace cacaosd_i2cport {
 
     }
 
+    int I2cPort::writeByte1(uint8_t DATA_REGADD, uint8_t data) {
+
+        uint8_t buffer[2];
+
+        buffer[0] = DATA_REGADD;
+        buffer[1] = data;
+
+        if (write(this->file_descriptor, buffer, 2) != 2) {
+            msg_error("Can not write data. Address %d.", device_address);
+            return -1;
+        }
+
+        return 0;
+    }
+
 /**
  * @function writeByteBuffer(uint8_t DATA_REGADD, uint8_t *data, uint8_t length)
  * @param DATA_REGADD Data Register Address.

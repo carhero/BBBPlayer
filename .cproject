@@ -167,44 +167,6 @@
                     					
                     <fileInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.2134510988.2001259310" name="ssdp_server.h" rcbsApplicability="disable" resourcePath="source/network/socket_server/ssdp_server.h" toolsToInvoke=""/>
                     					
-                    <folderInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.2134510988.2037522159" name="/" resourcePath="SrcInsight">
-                        						
-                        <toolChain id="cdt.managedbuild.toolchain.gnu.cross.exe.debug.1520835563" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.exe.debug" unusedChildren="">
-                            							
-                            <option id="cdt.managedbuild.option.gnu.cross.prefix.1914924554.70497391" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.1914924554"/>
-                            							
-                            <option id="cdt.managedbuild.option.gnu.cross.path.820454695.842310080" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.820454695"/>
-                            							
-                            <targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
-                            							
-                            <tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.239402167" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.910341421">
-                                								
-                                <inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1373290896" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
-                                							
-                            </tool>
-                            							
-                            <tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1070884885" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1833742469">
-                                								
-                                <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1523423175" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
-                                							
-                            </tool>
-                            							
-                            <tool id="cdt.managedbuild.tool.gnu.cross.c.linker.314715293" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.195038073"/>
-                            							
-                            <tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.644123765" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.1484667144"/>
-                            							
-                            <tool id="cdt.managedbuild.tool.gnu.cross.archiver.1113689975" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.1056722037"/>
-                            							
-                            <tool id="cdt.managedbuild.tool.gnu.cross.assembler.717160343" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.1609724593">
-                                								
-                                <inputType id="cdt.managedbuild.tool.gnu.assembler.input.1698988132" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
-                                							
-                            </tool>
-                            						
-                        </toolChain>
-                        					
-                    </folderInfo>
-                    					
                     <sourceEntries>
                         						
                         <entry excluding="source/network/socket_server|source/network/socket_server/ssdp_server.h|source/network/socket_server/ssdp_server.cpp|SrcInsight|source/drivers/iolib|source/systemcall" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
